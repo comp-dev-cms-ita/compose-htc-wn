@@ -23,11 +23,11 @@ services:
       source: /sys/fs/cgroup
       target: /sys/fs/cgroup
     healthcheck:
-      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/*/"]
-      interval: 30s
+      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/cms.dodas.infn.it/new_repository"]
+      interval: 10s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 5s
     env_file:
     - .env 
   cvmfs:
@@ -54,3 +54,11 @@ services:
     - type: bind
       source: ./cms-dodas-key
       target: /etc/cvmfs/keys/cms.dodas.infn.it
+ 
+  autoheal:
+    restart: always
+    environment:
+    - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    image: willfarrell/autoheal
