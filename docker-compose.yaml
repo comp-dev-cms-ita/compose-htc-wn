@@ -1,0 +1,56 @@
+version: '3.7'
+services:
+  wn:
+    depends_on:
+    - cvmfs
+    image: ghcr.io/dodas-ts/htc-dask-wn:v0.0.26-dask 
+    privileged: true
+    network_mode: "host"
+    volumes:
+    - type: bind
+      source: ./shared-secret
+      target: /etc/pwd
+    - type: bind
+      source: ./logs
+      target: /var/log/condor
+    - type: bind
+      source: ./cvmfs
+      target: /cvmfs
+    - type: bind
+      source: ./config.d
+      target: /etc/condor/config.d
+    - type: bind
+      source: /sys/fs/cgroup
+      target: /sys/fs/cgroup
+    healthcheck:
+      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/*/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    env_file:
+    - .env 
+  cvmfs:
+    image: dodasts/cvmfs:v1.4-reloaded 
+    #entrypoint: ["sleep", "infinity"]
+    environment:
+    - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it 
+    privileged: true
+    healthcheck:
+      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/*/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    volumes:
+    - type: bind
+      bind:
+        propagation: rshared
+      source: ./cvmfs
+      target: /cvmfs
+    - type: bind
+      source: ./default-local
+      target: /etc/cvmfs/config.d
+    - type: bind
+      source: ./cms-dodas-key
+      target: /etc/cvmfs/keys/cms.dodas.infn.it
