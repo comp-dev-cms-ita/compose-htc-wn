@@ -1,6 +1,3 @@
-# compose-htc-wn
-Docker compose to setup a functioning WNs attaching to a remote scheduler.
-
 What will be installed?
 - A HTCondor WN configured to register via shared secret to a remote pool
     - it will consists in a single partitionable slot with the whole node resources
