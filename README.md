@@ -6,6 +6,25 @@ What will be installed?
     - it will consists in a single partitionable slot with the whole node resources
 - A cvmfs container mounting all the needed repositories
 
+```text
+                                                          ▲
+                                                          │
+┌─────────────────────────────────────────┐               │
+│                                         │               │ To remote pool
+│         HTCondor STARTD                 │               │
+│                                         ├───────────────┘
+│              Partionable                │   shared secret
+├──────────────────────┬─────────┬────────┤
+│                      │         │        │
+│     SLOT 1           │  SLOT 2 │ SLOT 3 │
+│                      │         │        │
+├──────────────────────┴─────────┴────────┤
+│                                         │
+│                CVMFS                    │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
 ## Requirements
 - docker
 - docker-compose
