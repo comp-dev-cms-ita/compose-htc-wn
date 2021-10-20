@@ -53,7 +53,7 @@ mkdir ./cvmfs
 # Put in this file the shared secret to authenticate with the remote schedd
 echo -n "HTC SHARED SECRET HERE" > ./shared-secret/pool_password
 sudo chown root ./shared-secret/pool_password
-sudo chown 600 ./shared-secret/pool_password
+sudo chmod 600 ./shared-secret/pool_password
 ```
 
 Finally you will need a few configurations specific for you site. You should do this simply putting in `.env` file the following information:
