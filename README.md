@@ -46,14 +46,14 @@ git clone https://github.com/comp-dev-cms-ita/compose-htc-wn
 cd compose-htc-wn
 # Here the condor logs will be stored
 mkdir ./logs
-chown 64:64 -R ./logs
+sudo chown 64:64 -R ./logs
 # Here the cvmfs repos will be mounted
 mkdir ./cvmfs
 
 # Put in this file the shared secret to authenticate with the remote schedd
 echo -n "HTC SHARED SECRET HERE" > ./shared-secret/pool_password
-chown root ./shared-secret/pool_password
-chmod 600 ./shared-secret/pool_password
+sudo chown root ./shared-secret/pool_password
+sudo chown 600 ./shared-secret/pool_password
 ```
 
 Finally you will need a few configurations specific for you site. You should do this simply putting in `.env` file the following information:
@@ -95,14 +95,14 @@ write_files:
     cd compose-htc-wn
     # Here the condor logs will be stored
     mkdir ./logs
-    chown 64:64 -R ./logs
+    sudo chown 64:64 -R ./logs
     # Here the cvmfs repos will be mounted
     mkdir ./cvmfs
 
     # Put in this file the shared secret to authenticate with the remote schedd
     echo -n "HTC SHARED SECRET HERE" > ./shared-secret/pool_password
-    chown root ./shared-secret/pool_password
-    chmod 600 ./shared-secret/pool_password
+    sudo chown root ./shared-secret/pool_password
+    sudo chmod 600 ./shared-secret/pool_password
 
     cat << EOF  > .env
     _condor_SiteName = "\"YOUR SITE NAME HERE\""
