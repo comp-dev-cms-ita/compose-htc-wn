@@ -36,6 +36,7 @@ services:
     environment:
     - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it 
     privileged: true
+    network_mode: "host"
     healthcheck:
       test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/*/"]
       interval: 30s
