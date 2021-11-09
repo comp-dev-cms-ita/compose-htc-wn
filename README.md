@@ -39,8 +39,6 @@ What will be installed?
 
 At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder. 
 
-
-
 ## Preparation
 
 Firs of all create all the needed directories:
@@ -72,7 +70,7 @@ MEMORY = 16000
 
 ## Deploy
 <details>
-  <summary>No external volumes</summary>
+  <summary>__No external volumes__</summary>
 
 Now everything should be ready to go. Bring up the system with:
 
@@ -86,7 +84,7 @@ When everything is in status `healthy` (that can take several minutes), you shou
 
 <details>
 
-  <summary>Mounting an external volume</summary>
+  <summary>__Mounting an external volume__</summary>
 
 Mount on ./wn-spool the external volume and set the correct permission
 ```bash
