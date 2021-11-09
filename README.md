@@ -73,6 +73,7 @@ MEMORY = 16000
 ## Deploy
 <details>
   <summary>No external volumes</summary>
+
 Now everything should be ready to go. Bring up the system with:
 
 ```bash
@@ -82,6 +83,7 @@ docker-compose up -d
 and monitor the status via a simple `docker ps` command.
 When everything is in status `healthy` (that can take several minutes), you should be able to find the logs of the WN on `./logs` folder.
 </details>
+
 <details>
 
   <summary>Mounting an external volume</summary>
@@ -109,7 +111,6 @@ docker-compose up -d
 
 and monitor the status via a simple `docker ps` command.
 When everything is in status `healthy` (that can take several minutes), you should be able to find the logs of the WN on `./logs` folder.
-
 </details>
 
 ## Using OpenStack?
