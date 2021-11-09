@@ -70,7 +70,7 @@ MEMORY = 16000
 
 ## Deploy
 
->  :exclamation: Only for setup with external volume for wn spool dir 
+>  :exclamation: __N.B. Only for setup with external volume for wn spool dir__ 
 > 
 > Mount on ./wn-spool the external volume and set the correct permission
 > ```bash
