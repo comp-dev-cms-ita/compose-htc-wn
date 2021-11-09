@@ -69,8 +69,23 @@ MEMORY = 16000
 > __N.B.__ be careful on leaving the `\"` where they are in the example
 
 ## Deploy
-<details>
-  <summary>__No external volumes__</summary>
+
+>  :exclamation: Only for setup with external volume for wn spool dir 
+> 
+> Mount on ./wn-spool the external volume and set the correct permission
+> ```bash
+> sudo mkdir ./wn-spool
+> sudo mount /dev/vdb1 ./wn-spool
+> sudo chown 64:64 -R ./wn-spool
+>```
+>
+> Then in `docker-compose.yaml` uncomment the following lines:
+> 
+> ```yaml
+>   - type: bind
+>      source: ./wn-spool
+>      target: /var/lib/condor/execute
+> ```
 
 Now everything should be ready to go. Bring up the system with:
 
@@ -80,36 +95,6 @@ docker-compose up -d
 
 and monitor the status via a simple `docker ps` command.
 When everything is in status `healthy` (that can take several minutes), you should be able to find the logs of the WN on `./logs` folder.
-</details>
-
-<details>
-
-  <summary>__Mounting an external volume__</summary>
-
-Mount on ./wn-spool the external volume and set the correct permission
-```bash
-sudo mkdir ./wn-spool
-sudo mount /dev/vdb1 ./wn-spool
-sudo chown 64:64 -R ./wn-spool
-```
-
-Then in `docker-compose.yaml` uncomment the following lines:
-
-```yaml
-    - type: bind
-      source: ./wn-spool
-      target: /var/lib/condor/execute
-```
-
-Now everything should be ready to go. Bring up the system with:
-
-```bash
-docker-compose up -d
-```
-
-and monitor the status via a simple `docker ps` command.
-When everything is in status `healthy` (that can take several minutes), you should be able to find the logs of the WN on `./logs` folder.
-</details>
 
 ## Using OpenStack?
 
