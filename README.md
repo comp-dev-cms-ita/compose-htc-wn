@@ -37,6 +37,10 @@ What will be installed?
     sudo chmod +x /usr/local/bin/docker-compose
     ```
 
+At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder. 
+
+
+
 ## Preparation
 
 Firs of all create all the needed directories:
@@ -67,6 +71,35 @@ MEMORY = 16000
 > __N.B.__ be careful on leaving the `\"` where they are in the example
 
 ## Deploy
+<details>
+  <summary>No external volumes</summary>
+Now everything should be ready to go. Bring up the system with:
+
+```bash
+docker-compose up -d
+```
+
+and monitor the status via a simple `docker ps` command.
+When everything is in status `healthy` (that can take several minutes), you should be able to find the logs of the WN on `./logs` folder.
+</details>
+<details>
+
+  <summary>Mounting an external volume</summary>
+
+Mount on ./wn-spool the external volume and set the correct permission
+```bash
+sudo mkdir ./wn-spool
+sudo mount /dev/vdb1 ./wn-spool
+sudo chown 64:64 -R ./wn-spool
+```
+
+Then in `docker-compose.yaml` uncomment the following lines:
+
+```yaml
+    - type: bind
+      source: ./wn-spool
+      target: /var/lib/condor/execute
+```
 
 Now everything should be ready to go. Bring up the system with:
 
@@ -76,6 +109,8 @@ docker-compose up -d
 
 and monitor the status via a simple `docker ps` command.
 When everything is in status `healthy` (that can take several minutes), you should be able to find the logs of the WN on `./logs` folder.
+
+</details>
 
 ## Using OpenStack?
 

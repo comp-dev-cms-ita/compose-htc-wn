@@ -4,12 +4,16 @@ services:
     depends_on:
     - cvmfs
     image: ghcr.io/dodas-ts/htc-dask-wn:v0.0.26-dask 
+    restart: always
     privileged: true
     network_mode: "host"
     volumes:
     - type: bind
       source: ./shared-secret
       target: /etc/pwd
+    #- type: bind
+    #  source: ./wn-spool
+    #  target: /var/lib/condor/execute
     - type: bind
       source: ./logs
       target: /var/log/condor
@@ -31,7 +35,8 @@ services:
     env_file:
     - .env 
   cvmfs:
-    image: dodasts/cvmfs:v1.4-reloaded 
+    image: dodasts/cvmfs:v1.4-reloaded
+    restart: always
     #entrypoint: ["sleep", "infinity"]
     environment:
     - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it 
