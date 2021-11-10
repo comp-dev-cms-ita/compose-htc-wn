@@ -98,6 +98,8 @@ When everything is in status `healthy` (that can take several minutes), you shou
 
 ## Using OpenStack?
 
+>  :exclamation: __N.B. This is working ONLY for setup with NO external volumes__ 
+
 We have a cloud init file for all the setup above:
 
 ```text
