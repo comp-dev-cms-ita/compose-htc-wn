@@ -96,6 +96,15 @@ docker-compose up -d
 and monitor the status via a simple `docker ps` command.
 When everything is in status `healthy` (that can take several minutes), you should be able to find the logs of the WN on `./logs` folder.
 
+### Reconfigure
+
+If you need to change a configuration parameter, you also need to restart the containers in order to make the change taking effect:
+
+```bash
+docker-compose down
+docker-compose up -d
+```
+
 ## Using OpenStack?
 
 >  :exclamation: __N.B. This is working ONLY for setup with NO external volumes__ 
