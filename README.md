@@ -105,9 +105,32 @@ docker-compose down
 docker-compose up -d
 ```
 
+### Set the automatic cache selection for the xrootd client
+
+First of all edit `client.plugins.d/xcache.conf` as you need:
+
+```
+url = xrootd-cms.infn.it
+lib = /cvmfs/cms.dodas.infn.it/miniconda3/envs/cms-dodas/lib/libXrdClProxyPlugin-5.so 
+enable = true
+
+xroot_proxy = root://PUT HERE host:port of your cache or leave the default if your site don't have one yet//
+xroot_proxy_excl_domains = file:/*,localhost,eospublic.cern.ch,"PUT HERE THE HOSTNAME FOR WHICH YOU DON'T WANT TO PASS THROUGH THE CACHE (e.g. your local storage endpoint)"
+```
+
+The in `docker-compose.yaml` uncomment the following lines:
+
+```yaml
+    #- type: bind
+    #  source: ./client.plugins.d
+    #  target: /etc/xrootd/client.plugins.d
+```
+
+You are now ready to deploy or reconfigure as explained above.
+
 ## Using OpenStack?
 
->  :exclamation: __N.B. This is working ONLY for setup with NO external volumes__ 
+>  :exclamation: __N.B. This is working ONLY for setup with NO external volumes and default proxy for reading data__ 
 
 We have a cloud init file for all the setup above:
 
