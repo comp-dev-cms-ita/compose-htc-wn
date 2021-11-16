@@ -107,6 +107,8 @@ docker-compose up -d
 
 ### Set the automatic cache selection for the xrootd client
 
+> ❗ please check that your repository is aligned with the latest commits. In particular check if in `.env` file you see an entry like: `XRD_PLUGINCONFDIR=/etc/xrootd/client.plugins.d/`
+
 First of all edit `client.plugins.d/xcache.conf` as you need:
 
 ```
