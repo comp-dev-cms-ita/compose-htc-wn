@@ -14,6 +14,9 @@ services:
     #- type: bind
     #  source: ./wn-spool
     #  target: /var/lib/condor/execute
+    #- type: bind
+    #  source: ./client.plugins.d
+    #  target: /etc/xrootd/client.plugins.d
     - type: bind
       source: ./logs
       target: /var/log/condor
