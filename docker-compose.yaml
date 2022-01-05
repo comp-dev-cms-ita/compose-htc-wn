@@ -11,6 +11,9 @@ services:
     - type: bind
       source: ./shared-secret
       target: /etc/pwd
+
+# docker run --user telegraf:$(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/telegraf-config/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf  
+  
     #- type: bind
     #  source: ./wn-spool
     #  target: /var/lib/condor/execute
