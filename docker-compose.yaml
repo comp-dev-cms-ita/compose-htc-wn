@@ -63,7 +63,21 @@ services:
     - type: bind
       source: ./cms-dodas-key
       target: /etc/cvmfs/keys/cms.dodas.infn.it
- 
+
+  # docker run --user telegraf:$(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/telegraf-config/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf  
+  # GID=$(stat -c '%g' /var/run/docker.sock)  docker-compose up telegraf
+  telegraf:
+    image: telegraf
+    restart: always
+    volumes:
+    - type: bind
+      source: ./telegraf-config/telegraf.conf
+      target: /etc/telegraf/telegraf.conf
+    - type: bind
+      source: /var/run/docker.sock
+      target: /var/run/docker.sock
+    user: "telegraf:${GID}"
+
   autoheal:
     restart: always
     environment:

@@ -36,6 +36,9 @@ What will be installed?
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
     ```
+- a valid telegraf token to be able to push metrics to the central InfluxDB
+  - please contact diego.ciangottini<at>pg.infn.it to obtain one
+  - then insert it in `telegraf-config/telegraf.conf` where you find `token = "CHANGEME" `
 
 At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder. 
 
