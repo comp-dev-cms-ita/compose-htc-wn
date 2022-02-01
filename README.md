@@ -40,6 +40,7 @@ What will be installed?
   - please contact diego.ciangottini<at>pg.infn.it to obtain one
   - then insert it in `telegraf-config/telegraf.conf` where you find `token = "CHANGEME" `
 - put your site name in place if the tag `SITENAME HERE` in the `telegraf-config/telegraf.conf` file
+- allow telegraf to monitor the docker metrics with the following command: `echo "GID=$(stat -c '%g' /var/run/docker.sock)" >> .env`
 
 At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder. 
 
@@ -83,7 +84,7 @@ MEMORY = 16000
 > sudo chown 64:64 -R ./wn-spool
 >```
 >
-> Then in `docker-compose.yaml` uncomment the following lines:
+> Then in `docker-compose.yaml` uncomment the following lines (both under WN and telegraf service):
 > 
 > ```yaml
 >   - type: bind
