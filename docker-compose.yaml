@@ -77,6 +77,9 @@ services:
     - type: bind
       source: /var/run/docker.sock
       target: /var/run/docker.sock
+    - type: bind
+      source: /proc
+      target:  /host/proc
     #- type: bind
     #  source: ./wn-spool
     #  target: /var/lib/condor/execute
