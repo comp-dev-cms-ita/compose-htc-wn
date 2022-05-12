@@ -3,7 +3,7 @@ services:
   wn:
     depends_on:
     - cvmfs
-    image: ghcr.io/dodas-ts/htc-dask-wn:v0.0.26-dask 
+    image: ghcr.io/comp-dev-cms-ita/htcondor-dask-wn:v1.1.2
     restart: always
     privileged: true
     network_mode: "host"
@@ -42,7 +42,7 @@ services:
     restart: always
     #entrypoint: ["sleep", "infinity"]
     environment:
-    - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it 
+    - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it images.dodas.infn.it unpacked.cern.ch 
     privileged: true
     network_mode: "host"
     healthcheck:
@@ -63,6 +63,9 @@ services:
     - type: bind
       source: ./cms-dodas-key
       target: /etc/cvmfs/keys/cms.dodas.infn.it
+    - type: bind
+      source: ./images-dodas-key
+      target: /etc/cvmfs/keys/images.dodas.infn.it
 
   # docker run --user telegraf:$(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/telegraf-config/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf  
   # GID=$(stat -c '%g' /var/run/docker.sock)  docker-compose up telegraf
