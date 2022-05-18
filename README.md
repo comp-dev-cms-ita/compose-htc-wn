@@ -56,6 +56,7 @@ mkdir ./logs
 sudo chown 64:64 -R ./logs
 # Here the cvmfs repos will be mounted and cached
 mkdir -p ./cvmfs/cache
+sudo chown 102:102 -R ./cvmfs/cache
 
 # CVMFS cache limit to 4GB (adapt it to your space availability)
 echo "CVMFS_QUOTA_LIMIT=4000" >> ./default-local/images.dodas.infn.it.conf
