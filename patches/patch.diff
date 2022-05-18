@@ -1,70 +1,81 @@
-diff --git a/README.md b/README.md
-index 2bcc102..443d8a3 100644
---- a/README.md
-+++ b/README.md
-@@ -41,8 +41,8 @@ What will be installed?
-   - then insert it in `telegraf-config/telegraf.conf` where you find `token = "CHANGEME" `
- - put your site name in place if the tag `SITENAME HERE` in the `telegraf-config/telegraf.conf` file
- - allow telegraf to monitor the docker metrics with the following command: `echo "GID=$(stat -c '%g' /var/run/docker.sock)" >> .env`
--
--At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder. 
-+- ❗At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder.
-+- ❗At least 4GB reserved for `./cvmfs/cache` area, where cvmfs will cache singularity images
- 
- ## Preparation
- 
-@@ -54,8 +54,12 @@ cd compose-htc-wn
- # Here the condor logs will be stored
- mkdir ./logs
- sudo chown 64:64 -R ./logs
--# Here the cvmfs repos will be mounted
--mkdir ./cvmfs
-+# Here the cvmfs repos will be mounted and cached
-+mkdir -p ./cvmfs/cache
-+sudo chown 102:102 -R ./cvmfs/cache
-+
-+# CVMFS cache limit to 4GB (adapt it to your space availability)
-+echo "CVMFS_QUOTA_LIMIT=4000" >> ./default-local/images.dodas.infn.it.conf
- 
- # Put in this file the shared secret to authenticate with the remote schedd
- echo -n "HTC SHARED SECRET HERE" > ./shared-secret/pool_password
-@@ -135,7 +139,7 @@ The in `docker-compose.yaml` uncomment the following lines:
- 
- You are now ready to deploy or reconfigure as explained above.
- 
--## Using OpenStack?
-+## Using OpenStack? [OUT DATED]
- 
- >  :exclamation: __N.B. This is working ONLY for setup with NO external volumes and default proxy for reading data__ 
- 
-diff --git a/default-local/images.dodas.infn.it.conf b/default-local/images.dodas.infn.it.conf
-index 8d854ee..5db9f78 100644
---- a/default-local/images.dodas.infn.it.conf
-+++ b/default-local/images.dodas.infn.it.conf
-@@ -2,4 +2,6 @@ CVMFS_SERVER_URL=http://131.154.97.118/cvmfs/images.dodas.infn.it
- CVMFS_PUBLIC_KEY=/etc/cvmfs/keys/images.dodas.infn.it/images.dodas.infn.it.pub
- CVMFS_HTTP_PROXY=DIRECT
- CVMFS_DEBUGFILE=/tmp/cvmfs_images_dodas.log
--CVMFS_LOGFILE=/tmp/cvmfs_images_dodas.log
+diff --git a/config.d/99_custom_config b/config.d/99_custom_config
+index 8b21924..48ea0f8 100644
+--- a/config.d/99_custom_config
++++ b/config.d/99_custom_config
+@@ -21,4 +21,8 @@ NUM_SLOTS = 1
+ NUM_SLOTS_TYPE_1 = 1
+ SLOT_TYPE_1 = 100%
+ SLOT_TYPE_1_PARTITIONABLE = TRUE
+-STARTD_ATTRS = $(STARTD_ATTRS) SiteName
 \ No newline at end of file
++STARTD_ATTRS = $(STARTD_ATTRS) SiteName
++SINGULARITY_JOB = !isUndefined(TARGET.SingularityImage)
++SINGULARITY_IMAGE_EXPR = TARGET.SingularityImage
++SINGULARITY_BIND_EXPR = "/cvmfs"
++SINGULARITY_RUN_TEST_BEFORE_JOB = false
+\ No newline at end of file
+diff --git a/default-local/images.dodas.infn.it.conf b/default-local/images.dodas.infn.it.conf
+new file mode 100644
+index 0000000..5db9f78
+--- /dev/null
++++ b/default-local/images.dodas.infn.it.conf
+@@ -0,0 +1,7 @@
++CVMFS_SERVER_URL=http://131.154.97.118/cvmfs/images.dodas.infn.it
++CVMFS_PUBLIC_KEY=/etc/cvmfs/keys/images.dodas.infn.it/images.dodas.infn.it.pub
++CVMFS_HTTP_PROXY=DIRECT
++CVMFS_DEBUGFILE=/tmp/cvmfs_images_dodas.log
 +CVMFS_LOGFILE=/tmp/cvmfs_images_dodas.log
 +CVMFS_CACHE_BASE=/opt/cache
 +CVMFS_QUOTA_LIMIT=4000
 \ No newline at end of file
 diff --git a/docker-compose.yaml b/docker-compose.yaml
-index 9c99359..8b4479e 100644
+index 977ef33..8b4479e 100644
 --- a/docker-compose.yaml
 +++ b/docker-compose.yaml
-@@ -66,6 +66,9 @@ services:
+@@ -3,7 +3,7 @@ services:
+   wn:
+     depends_on:
+     - cvmfs
+-    image: ghcr.io/dodas-ts/htc-dask-wn:v0.0.26-dask 
++    image: ghcr.io/comp-dev-cms-ita/htcondor-dask-wn:v1.1.2
+     restart: always
+     privileged: true
+     network_mode: "host"
+@@ -42,7 +42,7 @@ services:
+     restart: always
+     #entrypoint: ["sleep", "infinity"]
+     environment:
+-    - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it 
++    - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it images.dodas.infn.it unpacked.cern.ch 
+     privileged: true
+     network_mode: "host"
+     healthcheck:
+@@ -63,6 +63,12 @@ services:
      - type: bind
-       source: ./images-dodas-key
-       target: /etc/cvmfs/keys/images.dodas.infn.it
+       source: ./cms-dodas-key
+       target: /etc/cvmfs/keys/cms.dodas.infn.it
++    - type: bind
++      source: ./images-dodas-key
++      target: /etc/cvmfs/keys/images.dodas.infn.it
 +    - type: bind
 +      source: ./cvmfs/cache
 +      target: /opt/cache/
  
    # docker run --user telegraf:$(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/telegraf-config/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf  
    # GID=$(stat -c '%g' /var/run/docker.sock)  docker-compose up telegraf
-diff --git a/patches/patch.diff b/patches/patch.diff
+diff --git a/images-dodas-key/images.dodas.infn.it.pub b/images-dodas-key/images.dodas.infn.it.pub
 new file mode 100644
-index 0000000..e69de29
+index 0000000..36673b6
+--- /dev/null
++++ b/images-dodas-key/images.dodas.infn.it.pub
+@@ -0,0 +1,9 @@
++-----BEGIN PUBLIC KEY-----
++MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs0nzNysZ7WnG4uXaugi/
++gt3fzYc/gz3mhdKqbmHNKDVbD7afKsUdTzH4J97GQ04KLLCMx325DPkO3SdloQ+c
++PCfzKTz3Mu9aOiHtnmaWK1lk5K80e6QVDe/JMsPISGDKMeyDzQyRaZuCOne8sTLt
++lTkerTg0m90m8mRfHXzPQlaEFbifSclCfDmbhzgRbmGkdbKGosHBC47ZphpB/0x6
++BmDPhwQOlsPKgIUYlWt0gbITkYsUWEiajesxKFCOzzODSwvxVrYwsFK5og2Y7RBh
++q3//UuHvFKm0OfYG20cL8bFFAQDzXbgWv3qjbqaFMcH/JPtHY15iIbbsS26pso/P
++/QIDAQAB
++-----END PUBLIC KEY-----
+\ No newline at end of file
