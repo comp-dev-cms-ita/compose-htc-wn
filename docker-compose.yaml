@@ -66,6 +66,9 @@ services:
     - type: bind
       source: ./images-dodas-key
       target: /etc/cvmfs/keys/images.dodas.infn.it
+    - type: bind
+      source: ./cvmfs/cache
+      target: /opt/cache/
 
   # docker run --user telegraf:$(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/telegraf-config/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf  
   # GID=$(stat -c '%g' /var/run/docker.sock)  docker-compose up telegraf

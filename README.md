@@ -41,8 +41,8 @@ What will be installed?
   - then insert it in `telegraf-config/telegraf.conf` where you find `token = "CHANGEME" `
 - put your site name in place if the tag `SITENAME HERE` in the `telegraf-config/telegraf.conf` file
 - allow telegraf to monitor the docker metrics with the following command: `echo "GID=$(stat -c '%g' /var/run/docker.sock)" >> .env`
-
-At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder. 
+- ❗At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder.
+- ❗At least 4GB reserved for `./cvmfs/cache` area, where cvmfs will cache singularity images
 
 ## Preparation
 
@@ -54,8 +54,11 @@ cd compose-htc-wn
 # Here the condor logs will be stored
 mkdir ./logs
 sudo chown 64:64 -R ./logs
-# Here the cvmfs repos will be mounted
-mkdir ./cvmfs
+# Here the cvmfs repos will be mounted and cached
+mkdir -p ./cvmfs/cache
+
+# CVMFS cache limit to 4GB (adapt it to your space availability)
+echo "CVMFS_QUOTA_LIMIT=4000" >> ./default-local/images.dodas.infn.it.conf
 
 # Put in this file the shared secret to authenticate with the remote schedd
 echo -n "HTC SHARED SECRET HERE" > ./shared-secret/pool_password
@@ -135,7 +138,7 @@ The in `docker-compose.yaml` uncomment the following lines:
 
 You are now ready to deploy or reconfigure as explained above.
 
-## Using OpenStack?
+## Using OpenStack? [OUT DATED]
 
 >  :exclamation: __N.B. This is working ONLY for setup with NO external volumes and default proxy for reading data__ 
 
