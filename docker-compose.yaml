@@ -30,7 +30,7 @@ services:
       source: /sys/fs/cgroup
       target: /sys/fs/cgroup
     healthcheck:
-      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/cms.dodas.infn.it/new_repository"]
+      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/images.dodas.infn.it/new_repository"]
       interval: 10s
       timeout: 10s
       retries: 3
