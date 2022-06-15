@@ -27,10 +27,13 @@ services:
       source: ./config.d
       target: /etc/condor/config.d
     - type: bind
+      source: ./healthchecks/wn-check.sh
+      target: /wn-check.sh
+    - type: bind
       source: /sys/fs/cgroup
       target: /sys/fs/cgroup
     healthcheck:
-      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/images.dodas.infn.it/new_repository"]
+      test: ["CMD", "/wn-check.sh"]
       interval: 10s
       timeout: 10s
       retries: 3
@@ -40,18 +43,21 @@ services:
   cvmfs:
     image: dodasts/cvmfs:v1.4-reloaded
     restart: always
+    env_file:
+    - .env 
     #entrypoint: ["sleep", "infinity"]
-    environment:
-    - REPO_LIST=cms.cern.ch  grid.cern.ch cms.dodas.infn.it images.dodas.infn.it unpacked.cern.ch 
     privileged: true
     network_mode: "host"
     healthcheck:
-      test: ["CMD", "/bin/bash", "-c", "ls -altrh /cvmfs/*/"]
+      test: ["CMD", "/cvmfs-check.sh"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
     volumes:
+    - type: bind
+      source: ./healthchecks/cvmfs-check.sh
+      target: /cvmfs-check.sh
     - type: bind
       bind:
         propagation: rshared
