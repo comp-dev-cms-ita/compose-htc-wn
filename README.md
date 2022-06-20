@@ -49,7 +49,7 @@ What will be installed?
 Firs of all create all the needed directories:
 ```bash
 # clone this repository
-git clone https://github.com/comp-dev-cms-ita/compose-htc-wn
+git clone https://github.com/comp-dev-cms-ita/compose-htc-wn --branch lhcb
 cd compose-htc-wn
 # Here the condor logs will be stored
 mkdir ./logs
