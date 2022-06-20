@@ -3,7 +3,7 @@ services:
   wn:
     depends_on:
     - cvmfs
-    image: ghcr.io/comp-dev-cms-ita/htcondor-dask-wn:v1.1.2
+    image: ghcr.io/comp-dev-cms-ita/htcondor-dask-wn:v2.0.0-pre2
     restart: always
     privileged: true
     network_mode: "host"
@@ -63,15 +63,6 @@ services:
         propagation: rshared
       source: ./cvmfs
       target: /cvmfs
-    - type: bind
-      source: ./default-local
-      target: /etc/cvmfs/config.d
-    - type: bind
-      source: ./cms-dodas-key
-      target: /etc/cvmfs/keys/cms.dodas.infn.it
-    - type: bind
-      source: ./images-dodas-key
-      target: /etc/cvmfs/keys/images.dodas.infn.it
     - type: bind
       source: ./cvmfs/cache
       target: /opt/cache/
