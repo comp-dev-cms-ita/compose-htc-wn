@@ -64,6 +64,12 @@ services:
       source: ./cvmfs
       target: /cvmfs
     - type: bind
+      source: ./default-local
+      target: /etc/cvmfs/config.d
+    - type: bind
+      source: ./images-dodas-key
+      target: /etc/cvmfs/keys/images.dodas.infn.it
+    - type: bind
       source: ./cvmfs/cache
       target: /opt/cache/
 
