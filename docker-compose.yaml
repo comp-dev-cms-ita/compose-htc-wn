@@ -32,6 +32,9 @@ services:
     - type: bind
       source: /sys/fs/cgroup
       target: /sys/fs/cgroup
+    - type: bind
+      source: /opt
+      target: /opt
     healthcheck:
       test: ["CMD", "/wn-check.sh"]
       interval: 10s
