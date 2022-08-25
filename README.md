@@ -42,7 +42,7 @@ What will be installed?
 - put your site name in place if the tag `SITENAME HERE` in the `telegraf-config/telegraf.conf` file
 - allow telegraf to monitor the docker metrics with the following command: `echo "GID=$(stat -c '%g' /var/run/docker.sock)" >> .env`
 - ❗At least 20GB per core are required for the host machine. In alternative it is also possible plug in an external volume dedicate to the worker node execute folder.
-- ❗At least 4GB reserved for `./cvmfs/cache` area, where cvmfs will cache singularity images
+- ❗At least 20GB reserved for `./cvmfs/cache` area, where cvmfs and rclone will cache data
 
 ## Preparation
 
@@ -111,6 +111,7 @@ If you need to change a configuration parameter, you also need to restart the co
 
 ```bash
 docker-compose down
+sudo umount ./shared-home
 docker-compose up -d
 ```
 
