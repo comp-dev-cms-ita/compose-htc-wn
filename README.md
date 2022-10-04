@@ -141,11 +141,6 @@ The in `docker-compose.yaml` uncomment the following lines:
 You are now ready to deploy or reconfigure as explained above.
 
 
-  path: /usr/local/bin/wn-install.sh
-runcmd:
-  - ["/bin/bash", "/usr/local/bin/wn-install.sh"]
-```
-
 ## Reset the environment and redeploy
     
 For any unrecoverable error you can proceed with a scratch docker environment with the following commands:
