@@ -140,44 +140,21 @@ The in `docker-compose.yaml` uncomment the following lines:
 
 You are now ready to deploy or reconfigure as explained above.
 
-## Using OpenStack? [OUT DATED]
-
->  :exclamation: __N.B. This is working ONLY for setup with NO external volumes and default proxy for reading data__ 
-
-We have a cloud init file for all the setup above:
-
-```text
-#cloud-config
-write_files:
-- content: |
-    #!/bin/bash
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-
-    git clone https://github.com/comp-dev-cms-ita/compose-htc-wn
-    cd compose-htc-wn
-    # Here the condor logs will be stored
-    mkdir ./logs
-    sudo chown 64:64 -R ./logs
-    # Here the cvmfs repos will be mounted
-    mkdir ./cvmfs
-
-    # Put in this file the shared secret to authenticate with the remote schedd
-    echo -n "HTC SHARED SECRET HERE" > ./shared-secret/pool_password
-    sudo chown root ./shared-secret/pool_password
-    sudo chmod 600 ./shared-secret/pool_password
-
-    cat << EOF  > .env
-    _condor_SiteName = "\"YOUR SITE NAME HERE\""
-    NUM_CPUS = 8
-    MEMORY = 16000
-    EOF
-
-    docker-compose up -d
 
   path: /usr/local/bin/wn-install.sh
 runcmd:
   - ["/bin/bash", "/usr/local/bin/wn-install.sh"]
+```
+
+## Reset the environment and redeploy
+    
+For any unrecoverable error you can proceed with a scratch docker environment with the following commands:
+    
+```bash
+docker-compose down
+kill -9 $(lsof -i :9618 | grep TCP | awk '{print $2}')
+docker ps | awk '{print $1}' | xargs docker kill
+docker ps -a | awk '{print $1}' | xargs docker rm
+sudo umount ./shared-home
+docker-compose up -d     
 ```
