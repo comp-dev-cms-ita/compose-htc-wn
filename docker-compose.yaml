@@ -3,7 +3,6 @@ services:
   wn:
     depends_on:
     - cvmfs
-    - rclone
     image: ghcr.io/comp-dev-cms-ita/htcondor-dask-wn:v1.1.2
     restart: always
     privileged: true
@@ -82,28 +81,7 @@ services:
     - type: bind
       source: ./cvmfs/cache
       target: /opt/cache/
-  rclone:
-    image: dodasts/rclone-mount:v0.1.7
-    privileged: true
-    network_mode: "host"
-    healthcheck:
-      test: ["CMD", "/rclone-check.sh"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-    volumes:
-    - type: bind
-      source: ./healthchecks/rclone-check.sh
-      target: /rclone-check.sh
-    - type: bind
-      bind:
-        propagation: rshared
-      source: ./shared-home
-      target: /shared-home
-    - type: bind
-      source: ./cvmfs/cache
-      target: /data/.cache/rclone
+
 
   # docker run --user telegraf:$(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/telegraf-config/telegraf.conf:/etc/telegraf/telegraf.conf:ro telegraf  
   # GID=$(stat -c '%g' /var/run/docker.sock)  docker-compose up telegraf
